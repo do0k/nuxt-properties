@@ -1,4 +1,6 @@
 export default defineNuxtRouteMiddleware(async () => {
   const user = useUser()
-  const {data, error} = useFetch('/api/user') 
+  const {data, error} = useFetch('/api/user')
+  if(error.value) throw createError('Failed to fetch data')
+  user.value = data.value?.user ?? 'null'
 })

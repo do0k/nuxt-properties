@@ -1,4 +1,5 @@
 import { lucia } from "lucia";
+import "lucia/polyfill/node";
 import { h3 } from "lucia/middleware";
 import { prisma } from "@lucia-auth/adapter-prisma";
 import { PrismaClient } from "@prisma/client";

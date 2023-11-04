@@ -8,6 +8,8 @@ CREATE TYPE "PaymentStatus" AS ENUM ('DONE', 'PENDING', 'RETURNED', 'CANCELED', 
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "code" INTEGER NOT NULL,
+    "username" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
     "otp" TEXT,
     "expire" TIMESTAMPTZ,
     "name" TEXT NOT NULL,
@@ -118,6 +120,9 @@ CREATE UNIQUE INDEX "User_id_key" ON "User"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_code_key" ON "User"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_mobile_key" ON "User"("mobile");

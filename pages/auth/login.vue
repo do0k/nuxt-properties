@@ -21,9 +21,9 @@ const handleSubmit = async (e: Event) => {
 </script>
 
 <template lang="pug">
-.flex.flex-col.items-center
+.flex.flex-col.items-center.font-yekan
   el-card
-    //- el-bar(title="ورود به سیستم" icon="teenyicons:lock-outline" icon-size="15px" )
+    el-bar(title="ورود به سیستم" icon="teenyicons:lock-outline" icon-size="15px" )
     .max-w-md.mt-3
       form(method="post" action="/api/auth/login")
         el-input(
@@ -33,10 +33,9 @@ const handleSubmit = async (e: Event) => {
           placeholder="نام‌کاربری"
           clearable
           autofocus,
-        ).mb-2
+        ).mb-2.font-yekan
           template(#prepend)
             icon(name="teenyicons:user-outline" size="15px" ).text-sky-600
-            //- .i-teenyicons-user-outline.text-sky-600
         el-input(
           ref="passwordInput"
           type="password"
@@ -50,7 +49,6 @@ const handleSubmit = async (e: Event) => {
         el-button(type="primary").w-full ورود به سیستم
           template(#loading)
             icon(name="svg-spinners:90-ring-with-bg" size="22px" ).mx-4
-            //- .i-90-ring-with-bg
       el-divider یا
       el-button().w-full بازیابی رمزورود
 </template>

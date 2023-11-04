@@ -1,33 +1,50 @@
 import { schema, useValidate } from "~/composables/useValidate";
 import { auth } from "~/server/utils/lucia";
+import { db } from "~/server/db";
 
 export default defineEventHandler(async (event) => {
-	const {username, password} = await useValidate(event, schema.object({
-		username: schema.coerce.string().trim().min(10).max(10),
-		password: schema.coerce.string().min(8, {message: 'رمزعبور باید حداقل ۸ کاراکتر باشد'})
-	}))
-
-	// Validations go here
+	const { username, password } = await useValidate(
+		event,
+		schema.object({
+			username: schema.coerce
+				.string()
+				.trim()
+				.min(10)
+				.max(10)
+				.refine(async (username) => {
+					const user = await db.user.findUnique({
+						where: { username },
+					});
+					console.log(JSON.stringify(user));
+					if (user) return false;
+					return true;
+				}, "این کدملی قبلا در سامانه ثبت شده است"),
+			password: schema.coerce
+				.string()
+				.min(8, { message: "رمزعبور باید حداقل ۸ کاراکتر باشد" }),
+		})
+	);
 
 	try {
 		const user = auth.createUser({
 			key: {
-				providerId: 'username',
+				providerId: "username",
 				providerUserId: username.toLowerCase(),
-				password
+				password,
 			},
 			attributes: {
-				username
-			}
-		})
+				username,
+			},
+		});
 		const session = await auth.createSession({
-			userId: user.userId,
-			attributes: {}
-		})
-		const authRequest = auth.handleRequest(event)
-		authRequest.setSession(session)
-		return sendRedirect(event, '/')
+			userId: await user.userId,
+			attributes: {},
+		});
+		const authRequest = auth.handleRequest(event);
+		authRequest.setSession(session);
+		return sendRedirect(event, "/");
 	} catch (e) {
-		console.log(e)
+		// throw createError("عملیات با خطا روبرو شد لطفا دوباره تلاش کنید");
+		console.log(e);
 	}
 });
